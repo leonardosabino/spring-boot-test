@@ -2,34 +2,35 @@ package com.example.tests.integrationTest;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
+import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@AutoConfigureMockMvc
 @Testcontainers
 public class BaseIT {
 
-    @Container
-    private static GenericContainer mongo = new GenericContainer("docker.io/bitnami/mongodb:4.4")
-            .waitingFor(Wait.forListeningPort());
+  @Container
+  static MongoDBContainer mongoDBContainer = new MongoDBContainer(
+      DockerImageName.parse("mongo:4.4.2"));
 
+  @Autowired
+  MockMvc mockMvc;
 
-//    Configuração para alterar os properties do contexto do teste de forma dinâmica
-//    @DynamicPropertySource
-//    static void registerProperties(DynamicPropertyRegistry registry) {
-//        registry.add("spring.datasource.url", () -> sql.getJdbcUrl());
-//        registry.add("spring.datasource.password", () -> sql.getPassword());
-//        registry.add("spring.datasource.username", () -> sql.getUsername());
-//    }
-
+  @DynamicPropertySource
+  static void setProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+  }
 
 }

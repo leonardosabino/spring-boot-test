@@ -1,22 +1,20 @@
 package com.example.tests.model.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ClienteDTO {
 
-    private String id;
+  private String id;
 
-    private String nome;
+  private String nome;
 
-    private String cpf;
-
-    private LocalDate dataNascimento;
+  private String cpf;
 
 }

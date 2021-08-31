@@ -1,5 +1,6 @@
 package com.example.tests.model.entity;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,9 +9,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-
 @Document(value = "cliente")
 @TypeAlias(value = "cliente")
 @Data
@@ -18,15 +16,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClienteEntity implements Serializable {
-    private static final long serialVersionUID = 6823400498011328527L;
 
-    @Id
-    private String id;
+  private static final long serialVersionUID = 6823400498011328527L;
 
-    private String nome;
+  @Id
+  private String id;
 
-    private String cpf;
+  private String nome;
 
-    private LocalDate dataNascimento;
+  private String cpf;
 
 }

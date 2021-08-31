@@ -1,27 +1,38 @@
 package com.example.tests.integrationTest;
 
-import org.junit.jupiter.api.DisplayName;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-public class ClienteServiceIT extends BaseIT{
+import com.example.tests.model.dto.ClienteDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 
-    @Autowired
-    MockMvc mockMvc;
+class ClienteServiceIT extends BaseIT {
 
-    @DisplayName("Salva um cliente")
-    void salvarCliente() throws Exception {
-//        ObjectMapper mapper = new ObjectMapper();
-//        this.mockMvc.perform(
-//                post("/v1/cliente")
-//                .content(mapper.writeValueAsString())
-//                .
-//        )
-    }
+  @Test
+  @Order(1)
+  @DisplayName("Salva um cliente")
+  void salvarCliente() throws Exception {
+    var clienteDTO = criarCliente();
+    var mapper = new ObjectMapper();
+    ResultActions resultActions = this.mockMvc.perform(
+        post("/v1/cliente")
+            .content(mapper.writeValueAsString(clienteDTO))
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+    resultActions.andExpect(status().isCreated());
+  }
+
+  private ClienteDTO criarCliente() {
+    return ClienteDTO.builder()
+        .cpf("546.942.390-58")
+        .nome("Leonardo Sabino")
+        .build();
+  }
 
 }
